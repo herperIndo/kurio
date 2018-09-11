@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "972123461134",
+    "firebase_url": "https://kuriomessanger-4fb20.firebaseio.com",
+    "project_id": "kuriomessanger-4fb20",
+    "storage_bucket": "kuriomessanger-4fb20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972123461134:android:06cd2d8ff9700394",
+        "android_client_info": {
+          "package_name": "com.heru.httpwww.kurio_messanger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972123461134-70kb0fusgraqp9iaf4e2rkl7kre238di.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFYUOpPsF93KMYqqt5pU1G7k4LUdzKYlE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
