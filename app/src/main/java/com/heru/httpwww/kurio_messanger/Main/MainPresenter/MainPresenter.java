@@ -26,7 +26,6 @@ public class MainPresenter {
 
         room roomData = new room();
         roomData.setUid(key);
-        Log.d("heruuuuuuuu", key);
         roomData.setTittleRoom(roomName);
         reference.push().setValue(roomData);
         pd.dismiss();

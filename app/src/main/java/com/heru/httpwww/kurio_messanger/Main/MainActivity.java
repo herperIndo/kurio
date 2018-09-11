@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,11 +26,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
+import com.heru.httpwww.kurio_messanger.Chat.ChatActivity;
 import com.heru.httpwww.kurio_messanger.Main.MainPresenter.MainPresenter;
 import com.heru.httpwww.kurio_messanger.Main.MainView.MainView;
 import com.heru.httpwww.kurio_messanger.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             userName = extras.getString("user");
         }
         tvUser.setText(userName);
-        Firebase.setAndroidContext(this);
+        ButterKnife.bind(this);
         CheckRoom();
     }
 
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         pd = new ProgressDialog(context);
         pd.setMessage("Loading...");
         pd.show();
+        al.clear();
+
         String url = "https://kuriomessanger-4fb20.firebaseio.com/room.json";
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -93,6 +97,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
         });
         RequestQueue rQueue = Volley.newRequestQueue(context);
         rQueue.add(request);
+        listRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(activity,ChatActivity.class);
+                intent.putExtra("roomName",al.get(position));
+                startActivity(intent);
+                activity.finish();
+            }
+        });
     }
 
     @OnClick({R.id.btnAddGroup})
@@ -100,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         switch (view.getId()) {
             case R.id.btnAddGroup:
                 dialog = new Dialog(activity);
-//                dialog.setCancelable(false);
                 dialog.setContentView(R.layout.popup_add_room);
                 final EditText etRoom = (EditText) dialog.findViewById(R.id.etRoom);
                 Button btnOk = (Button) dialog.findViewById(R.id.btnSubmit);
@@ -112,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                             Toast.makeText(context, "Please Input Room Name", Toast.LENGTH_LONG).show();
                         } else {
                             presenter.pushRoom(activity, context, room);
+                            dialog.dismiss();
                         }
                     }
                 });
@@ -131,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
             Iterator it = obj.keys();
             String key;
-            al.clear();
             for (int j = 0; j < obj.length(); j++) {
                 key = it.next().toString();
                 JSONObject obj2 = obj.getJSONObject(key);
