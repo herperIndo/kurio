@@ -64,7 +64,6 @@
 
 
     <RelativeLayout
-        android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
@@ -74,6 +73,7 @@
         android:layout_alignParentRight="true">
 
         <Button
+            android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@drawable/btn_default"
@@ -83,22 +83,22 @@
             android:textSize="12sp" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/btnCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/llInputEstimation"
-        android:layout_toLeftOf="@+id/btnSubmit">
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/btnCancel"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_below="@+id/llInputEstimation"-->
+        <!--android:layout_toLeftOf="@+id/btnSubmit">-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_cancel"
-            android:padding="5dp"
-            android:layout_marginRight="10dp"
-            android:text="cancel"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-    </RelativeLayout>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/btn_default_cancel"-->
+            <!--android:padding="5dp"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:text="cancel"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="12sp" />-->
+    <!--</RelativeLayout>-->
 </RelativeLayout>

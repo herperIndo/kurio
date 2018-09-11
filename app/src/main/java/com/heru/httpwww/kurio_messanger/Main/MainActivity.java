@@ -115,13 +115,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         }
                     }
                 });
-//                RelativeLayout btnCancel = (RelativeLayout) dialog.findViewById(R.id.btnCancel);
-//                btnCancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        dialog.dismiss();
-//                    }
-//                });
                 dialog.show();
                 break;
         }
@@ -138,39 +131,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
             Iterator it = obj.keys();
             String key;
-
+            al.clear();
             for (int j = 0; j < obj.length(); j++) {
                 key = it.next().toString();
                 JSONObject obj2 = obj.getJSONObject(key);
                 String tittle = obj2.getString("tittleRoom");
-
-                int sw = 0;
-
-//                JSONObject json = obj2.getJSONObject(j);
-//                String tittle = json.getString("tittleRoom");
                 al.add(tittle);
             }
-
-
-//            while (i.hasNext()) {
-//                key = i.next().toString();
-//                JSONArray obj2 = obj.getJSONArray(key);
-//                String id = obj2.getString()
-////                if(!key.equals(UserDetails.username)) {
-//                al.add(key);
-////                }
-//
-//                totalUsers++;
-//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         listRoom.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al));
-
-
         pd.dismiss();
     }
 }
