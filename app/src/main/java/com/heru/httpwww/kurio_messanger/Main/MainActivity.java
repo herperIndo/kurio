@@ -2,25 +2,38 @@ package com.heru.httpwww.kurio_messanger.Main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.client.Firebase;
 import com.heru.httpwww.kurio_messanger.Main.MainPresenter.MainPresenter;
 import com.heru.httpwww.kurio_messanger.Main.MainView.MainView;
 import com.heru.httpwww.kurio_messanger.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,12 +48,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
     TextView tvUser;
     @BindView(R.id.btnAddGroup)
     LinearLayout btnAddGroup;
+    @BindView(R.id.listRoom)
+    ListView listRoom;
     private Bundle extras;
     private String userName;
     Activity activity = this;
     Context context = this;
     MainPresenter presenter;
     Dialog dialog;
+    ProgressDialog pd;
+    int totalUsers = 0;
+    ArrayList<String> al = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +72,27 @@ public class MainActivity extends AppCompatActivity implements MainView {
         }
         tvUser.setText(userName);
         Firebase.setAndroidContext(this);
+        CheckRoom();
+    }
+
+    private void CheckRoom() {
+        pd = new ProgressDialog(context);
+        pd.setMessage("Loading...");
+        pd.show();
+        String url = "https://kuriomessanger-4fb20.firebaseio.com/room.json";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                doOnSuccess(s);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+            }
+        });
+        RequestQueue rQueue = Volley.newRequestQueue(context);
+        rQueue.add(request);
     }
 
     @OnClick({R.id.btnAddGroup})
@@ -61,32 +100,77 @@ public class MainActivity extends AppCompatActivity implements MainView {
         switch (view.getId()) {
             case R.id.btnAddGroup:
                 dialog = new Dialog(activity);
-                dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
-                dialog.setCancelable(false);
+//                dialog.setCancelable(false);
                 dialog.setContentView(R.layout.popup_add_room);
-                dialog.show();
-                final EditText etRoom = (EditText)dialog.findViewById(R.id.etRoom);
-                RelativeLayout btnOk = (RelativeLayout) dialog.findViewById(R.id.btnSubmit);
+                final EditText etRoom = (EditText) dialog.findViewById(R.id.etRoom);
+                Button btnOk = (Button) dialog.findViewById(R.id.btnSubmit);
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String room = etRoom.getText().toString();
                         if (room.equals("")) {
-                            Toast.makeText(context,"Please Input Room Name",Toast.LENGTH_LONG).show();
-                        }else{
-                            presenter.pushRoom(activity, context);
+                            Toast.makeText(context, "Please Input Room Name", Toast.LENGTH_LONG).show();
+                        } else {
+                            presenter.pushRoom(activity, context, room);
                         }
                     }
                 });
-                RelativeLayout btnCancel = (RelativeLayout) dialog.findViewById(R.id.btnCancel);
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
+//                RelativeLayout btnCancel = (RelativeLayout) dialog.findViewById(R.id.btnCancel);
+//                btnCancel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                    }
+//                });
+                dialog.show();
                 break;
         }
     }
 
+    @Override
+    public void CreateRoom() {
+        CheckRoom();
+    }
+
+    public void doOnSuccess(String s) {
+        try {
+            JSONObject obj = new JSONObject(s);
+
+            Iterator it = obj.keys();
+            String key;
+
+            for (int j = 0; j < obj.length(); j++) {
+                key = it.next().toString();
+                JSONObject obj2 = obj.getJSONObject(key);
+                String tittle = obj2.getString("tittleRoom");
+
+                int sw = 0;
+
+//                JSONObject json = obj2.getJSONObject(j);
+//                String tittle = json.getString("tittleRoom");
+                al.add(tittle);
+            }
+
+
+//            while (i.hasNext()) {
+//                key = i.next().toString();
+//                JSONArray obj2 = obj.getJSONArray(key);
+//                String id = obj2.getString()
+////                if(!key.equals(UserDetails.username)) {
+//                al.add(key);
+////                }
+//
+//                totalUsers++;
+//            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        listRoom.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al));
+
+
+        pd.dismiss();
+    }
 }
